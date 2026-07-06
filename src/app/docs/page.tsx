@@ -1,27 +1,44 @@
-import { FileText, Clock, Sparkles } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
+import DocsClient from './DocsClient'
+import { Sparkles, FileText } from 'lucide-react'
 
-export default function DocsPage() {
+export default async function DocsPage() {
+  const supabase = await createClient()
+
+  // 尝试获取资料数据
+  let docs: any[] = []
+
+  try {
+    const { data, error } = await supabase
+      .from('documents')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (!error && data) {
+      docs = data
+    }
+  } catch (err) {
+    console.log("Documents table might not exist yet", err)
+  }
+
+  // 获取当前用户状态（判断是否能看到上传按钮）
+  const { data: { user } } = await supabase.auth.getUser()
+
   return (
-    <div className="flex-1 w-full max-w-md mx-auto pt-6 px-4 pb-8 flex flex-col items-center justify-center min-h-[70vh]">
-      <div className="relative mb-6">
-        <Sparkles className="absolute -top-4 -right-4 text-[var(--color-brand-green)] opacity-50" size={24} />
-        <div className="w-24 h-24 bg-gradient-to-br from-[var(--color-brand-green)]/20 to-[var(--color-brand-green)]/10 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-          <FileText size={40} className="text-[var(--color-brand-green)]" />
+    <div className="flex-1 w-full max-w-md mx-auto pt-6 px-4 pb-8 min-h-[70vh]">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-full bg-[var(--color-brand-green)]/10 flex items-center justify-center text-[var(--color-brand-green)]">
+          <FileText size={20} />
         </div>
+        <h1 className="text-xl font-bold text-[#5C4D3C]">
+          资料档案
+          <span className="ml-3 text-xs font-normal px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full">
+            {docs.length} 份文件
+          </span>
+        </h1>
       </div>
 
-      <h1 className="text-2xl font-bold text-[#5C4D3C] mb-3">资料档案</h1>
-
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-[var(--color-brand-green)]/20 text-center relative overflow-hidden w-full">
-        <div className="absolute top-0 left-0 w-32 h-32 bg-[var(--color-brand-green)]/10 rounded-full blur-2xl -translate-y-1/2 -translate-x-1/2"></div>
-
-        <Clock className="mx-auto text-[#7D6B5A]/50 mb-3" size={28} />
-        <h2 className="text-lg font-bold text-[#5C4D3C] mb-2 relative z-10">施工中...</h2>
-        <p className="text-sm text-[#7D6B5A] leading-relaxed relative z-10">
-          这里以后会用来存放咱们家的视频、重要文档和各种记录。<br />
-          功能正在加紧开发中，敬请期待！
-        </p>
-      </div>
+      <DocsClient initialDocs={docs} isLoggedIn={!!user} />
     </div>
   )
 }
