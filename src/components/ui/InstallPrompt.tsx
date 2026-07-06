@@ -1,14 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, Share, PlusSquare } from 'lucide-react'
+import { X, Share, PlusSquare, Compass } from 'lucide-react'
 
 export function InstallPrompt() {
   const [showPrompt, setShowPrompt] = useState(false)
   const [isIOS, setIsIOS] = useState(false)
+  const [isWechat, setIsWechat] = useState(false)
 
   useEffect(() => {
-    // 检查是否是手机端，且是否已经在独立应用模式下运行
+    // 检查是否已经在独立应用模式下运行
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
                          (window.navigator as any).standalone || 
                          document.referrer.includes('android-app://')
@@ -17,18 +18,15 @@ export function InstallPrompt() {
       return // 已经安装了就不显示
     }
 
-    // 检查设备类型
     const ua = window.navigator.userAgent
     const isIOSDevice = /iPad|iPhone|iPod/.test(ua)
     const isAndroidDevice = /Android/.test(ua)
-    
-    // 如果是微信内置浏览器，提示稍微不同（因为微信屏蔽了安装）
-    const isWechat = /MicroMessenger/i.test(ua)
+    const wechatEnv = /MicroMessenger/i.test(ua)
 
-    if ((isIOSDevice || isAndroidDevice) && !isWechat) {
+    if (isIOSDevice || isAndroidDevice) {
       setIsIOS(isIOSDevice)
+      setIsWechat(wechatEnv)
       
-      // 延迟3秒后显示，以免打扰用户第一眼看网页
       const timer = setTimeout(() => {
         const hasDismissed = localStorage.getItem('dismissed_install_prompt')
         if (!hasDismissed) {
@@ -63,7 +61,11 @@ export function InstallPrompt() {
         <div>
           <h4 className="text-sm font-bold text-[#5C4D3C] mb-1">把家装进手机里！</h4>
           <p className="text-xs text-[#7D6B5A] leading-relaxed">
-            {isIOS ? (
+            {isWechat ? (
+              <span className="text-[var(--color-brand-orange)] font-medium">
+                微信里无法直接安装哦！<br/>请点击右上角 <span className="font-bold text-black text-sm">···</span> 选择 <Compass size={12} className="inline mx-0.5" /> <strong>"在浏览器打开"</strong>，然后再添加到桌面！
+              </span>
+            ) : isIOS ? (
               <span>点击底部的 <Share size={12} className="inline mb-0.5 mx-0.5" /> 图标<br/>然后选择 <strong>"添加到主屏幕" <PlusSquare size={12} className="inline mx-0.5" /></strong></span>
             ) : (
               <span>点击浏览器右上角菜单<br/>选择 <strong>"添加到主屏幕"</strong> 或者 <strong>"安装应用"</strong></span>
