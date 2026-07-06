@@ -96,12 +96,14 @@ export function UpdatesFeed() {
 
     try {
       const authorName = user.user_metadata?.full_name || '家人'
+      const authorAvatar = user.user_metadata?.avatar_url || '' // 获取发帖时的头像
 
       const { error } = await supabase
         .from('posts')
         .insert({
           user_id: user.id,
           author_name: authorName,
+          author_avatar: authorAvatar, // 存入新增的字段
           content: newPostContent.trim()
         })
 
@@ -116,6 +118,8 @@ export function UpdatesFeed() {
       console.error(err)
       if (err.message?.includes('relation "public.posts" does not exist')) {
         setPostError('数据库还没准备好哦，请先在 Supabase 建立 posts 表！')
+      } else if (err.message?.includes('column "author_avatar" of relation "posts" does not exist')) {
+        setPostError('需要去 Supabase 数据库为 posts 表增加 author_avatar 字段哦')
       } else {
         setPostError(err.message || '发布失败，请稍后再试')
       }
@@ -162,28 +166,32 @@ export function UpdatesFeed() {
         </div>
       ) : posts.length > 0 ? (
         <div className="space-y-3">
-          {posts.map(post => (
-            <div key={post.id} className="bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-[var(--color-brand-blue)]/10 flex gap-3">
-              <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex-shrink-0 border border-gray-100">
-                <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${post.author_name}&backgroundColor=FF9B54`} alt="avatar" />
-              </div>
-              <div className="flex-1">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="font-bold text-sm text-[#5C4D3C]">{post.author_name}</span>
-                  <span className="text-[10px] text-gray-400">{formatTime(post.created_at)}</span>
+          {posts.map(post => {
+            // 如果这条动态存了真实的头像就用，否则用可爱的生成头像
+            const avatarUrl = post.author_avatar || `https://api.dicebear.com/7.x/notionists/svg?seed=${post.author_name}&backgroundColor=FF9B54`
+            return (
+              <div key={post.id} className="bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-[var(--color-brand-blue)]/10 flex gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex-shrink-0 border border-gray-100">
+                  <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
                 </div>
-                <p className="text-xs text-[#7D6B5A] leading-relaxed mb-2 whitespace-pre-wrap">{post.content}</p>
-                <div className="flex gap-4 text-gray-400">
-                  <button className="flex items-center gap-1 text-[11px] hover:text-[var(--color-brand-pink)] transition-colors">
-                    <Heart size={14} /> <span>{post.id === 'mock-1' ? 3 : 0}</span>
-                  </button>
-                  <button className="flex items-center gap-1 text-[11px] hover:text-[var(--color-brand-blue)] transition-colors">
-                    <MessageCircle size={14} /> <span>{post.id === 'mock-1' ? 1 : 0}</span>
-                  </button>
+                <div className="flex-1">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-bold text-sm text-[#5C4D3C]">{post.author_name}</span>
+                    <span className="text-[10px] text-gray-400">{formatTime(post.created_at)}</span>
+                  </div>
+                  <p className="text-xs text-[#7D6B5A] leading-relaxed mb-2 whitespace-pre-wrap">{post.content}</p>
+                  <div className="flex gap-4 text-gray-400">
+                    <button className="flex items-center gap-1 text-[11px] hover:text-[var(--color-brand-pink)] transition-colors">
+                      <Heart size={14} /> <span>{post.id === 'mock-1' ? 3 : 0}</span>
+                    </button>
+                    <button className="flex items-center gap-1 text-[11px] hover:text-[var(--color-brand-blue)] transition-colors">
+                      <MessageCircle size={14} /> <span>{post.id === 'mock-1' ? 1 : 0}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       ) : (
         <div className="text-center p-6 bg-white/50 rounded-2xl border border-dashed border-gray-200">
