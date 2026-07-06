@@ -5,7 +5,7 @@ import { Pagination, Autoplay, EffectCards } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/effect-cards'
-import { Heart, Star, Sparkles, ImageIcon, FileText } from 'lucide-react'
+import { Heart, Star, Sparkles, ImageIcon, FileText, Gamepad2 } from 'lucide-react'
 import Link from 'next/link'
 import { UpdatesFeed } from '@/components/ui/UpdatesFeed'
 
@@ -73,27 +73,35 @@ export default function Home() {
       </section>
 
       {/* 快捷入口区 */}
-      <section className="grid grid-cols-2 gap-4 mb-8">
-        <Link href="/albums" className="bg-gradient-to-br from-[#FFE8D6] to-[#FFD166]/30 p-4 rounded-3xl border border-white shadow-sm flex flex-col justify-between aspect-square relative overflow-hidden group active:scale-95 transition-transform block">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-[var(--color-brand-orange)]">
-            <ImageIcon size={20} strokeWidth={2.5} />
+      <section className="grid grid-cols-3 gap-3 mb-8">
+        <Link href="/albums" className="bg-gradient-to-br from-[#FFE8D6] to-[#FFD166]/30 p-3 rounded-3xl border border-white shadow-sm flex flex-col justify-between aspect-square relative overflow-hidden group active:scale-95 transition-transform block">
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm text-[var(--color-brand-orange)]">
+            <ImageIcon size={16} strokeWidth={2.5} />
           </div>
           <div className="mt-auto relative z-10">
-            <h3 className="font-bold text-[#5C4D3C]">家庭相册</h3>
-            <p className="text-[11px] text-[#7D6B5A] mt-1">记录每个美好瞬间</p>
+            <h3 className="font-bold text-[#5C4D3C] text-sm">家庭相册</h3>
           </div>
-          <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+          <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
         </Link>
 
-        <Link href="/docs" className="bg-gradient-to-br from-[#E2EAC4] to-[#90BE6D]/30 p-4 rounded-3xl border border-white shadow-sm flex flex-col justify-between aspect-square relative overflow-hidden group active:scale-95 transition-transform block">
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-[var(--color-brand-green)]">
-            <FileText size={20} strokeWidth={2.5} />
+        <Link href="/docs" className="bg-gradient-to-br from-[#E2EAC4] to-[#90BE6D]/30 p-3 rounded-3xl border border-white shadow-sm flex flex-col justify-between aspect-square relative overflow-hidden group active:scale-95 transition-transform block">
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm text-[var(--color-brand-green)]">
+            <FileText size={16} strokeWidth={2.5} />
           </div>
           <div className="mt-auto relative z-10">
-            <h3 className="font-bold text-[#5C4D3C]">资料档案</h3>
-            <p className="text-[11px] text-[#7D6B5A] mt-1">视频、文档全在这里</p>
+            <h3 className="font-bold text-[#5C4D3C] text-sm">资料档案</h3>
           </div>
-          <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+          <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+        </Link>
+
+        <Link href="/games" className="bg-gradient-to-br from-[#FAD2E1] to-[#FF99C8]/30 p-3 rounded-3xl border border-white shadow-sm flex flex-col justify-between aspect-square relative overflow-hidden group active:scale-95 transition-transform block">
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm text-[var(--color-brand-pink)]">
+            <Gamepad2 size={16} strokeWidth={2.5} />
+          </div>
+          <div className="mt-auto relative z-10">
+            <h3 className="font-bold text-[#5C4D3C] text-sm">游戏室</h3>
+          </div>
+          <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-white/20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
         </Link>
       </section>
 
