@@ -1,6 +1,6 @@
 'use client'
 
-import { Home, Image as ImageIcon, FileText, User } from 'lucide-react'
+import { Home, Image as ImageIcon, FileText, User, Search } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -23,7 +23,7 @@ export function BottomNav() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-t border-[var(--color-brand-yellow)]/30 rounded-t-2xl shadow-[0_-4px_20px_-10px_rgba(255,155,84,0.15)] pb-safe">
-      <div className="flex justify-around items-center h-16 max-w-md mx-auto px-4">
+      <div className="flex justify-around items-center h-16 max-w-md mx-auto px-2">
         <Link href="/" className={getLinkClasses('/')}>
           <div className={getIconContainerClasses('/')}>
             <Home size={22} strokeWidth={2.5} />
@@ -36,6 +36,13 @@ export function BottomNav() {
             <ImageIcon size={22} strokeWidth={2.5} />
           </div>
           <span className="text-[10px] font-medium">相册</span>
+        </Link>
+
+        <Link href="/search" className={getLinkClasses('/search')}>
+          <div className={getIconContainerClasses('/search')}>
+            <Search size={22} strokeWidth={2.5} />
+          </div>
+          <span className="text-[10px] font-medium">搜索</span>
         </Link>
 
         <Link href="/docs" className={getLinkClasses('/docs')}>
