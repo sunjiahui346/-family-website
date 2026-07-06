@@ -8,6 +8,7 @@ import 'swiper/css/effect-cards'
 import { Heart, Star, Sparkles, ImageIcon, FileText, Gamepad2 } from 'lucide-react'
 import Link from 'next/link'
 import { UpdatesFeed } from '@/components/ui/UpdatesFeed'
+import { MoodTracker } from '@/components/ui/MoodTracker'
 
 // 模拟一些全家福数据（后续可以从 Supabase 动态读取）
 const FAMILY_PHOTOS = [
@@ -38,6 +39,9 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {/* 今日心情贴贴 */}
+      <MoodTracker />
 
       {/* 轮播图区域 */}
       <section className="mb-10 w-full relative z-10">
