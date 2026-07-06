@@ -1,0 +1,17 @@
+{
+  "name": "我们的温馨小家",
+  "short_name": "家庭空间",
+  "description": "专属我们全家人的私密记录空间",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8F0",
+  "theme_color": "#FF9B54",
+  "icons": [
+    {
+      "src": "https://api.dicebear.com/7.x/notionists/svg?seed=Family&backgroundColor=FF9B54",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
