@@ -1,2 +1,7 @@
 [[plugins]]
 package = "@netlify/plugin-nextjs"
+
+[build]
+  command = "next build"
+  publish = ".next"
+  environment = { NEXT_PRIVATE_STANDALONE = "true" }
