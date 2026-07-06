@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination, Autoplay, EffectCards } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/effect-cards'
-import { Heart, Star, Sparkles, MessageCircle, ImageIcon, FileText } from 'lucide-react'
+import { Heart, Star, Sparkles, ImageIcon, FileText } from 'lucide-react'
 import Link from 'next/link'
+import { UpdatesFeed } from '@/components/ui/UpdatesFeed'
 
 // 模拟一些全家福数据（后续可以从 Supabase 动态读取）
 const FAMILY_PHOTOS = [
@@ -97,32 +97,8 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* 最新动态（简化版） */}
-      <section className="mb-6">
-        <h2 className="text-base font-bold mb-4 flex items-center pl-2 border-l-4 border-[var(--color-brand-blue)] rounded-sm">
-          最新动态
-        </h2>
-        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-[var(--color-brand-blue)]/20 mb-3 flex gap-3">
-          <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
-            <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix&backgroundColor=FF9B54" alt="avatar" />
-          </div>
-          <div className="flex-1">
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-bold text-sm">爸爸</span>
-              <span className="text-[10px] text-gray-400">2小时前</span>
-            </div>
-            <p className="text-xs text-[#7D6B5A] leading-relaxed mb-2">今天把院子里的花草修剪了一下，看起来清爽多了！大家周末要不要回来烤肉？🥩</p>
-            <div className="flex gap-4 text-gray-400">
-              <button className="flex items-center gap-1 text-[11px] hover:text-[var(--color-brand-pink)] transition-colors">
-                <Heart size={14} /> <span>3</span>
-              </button>
-              <button className="flex items-center gap-1 text-[11px] hover:text-[var(--color-brand-blue)] transition-colors">
-                <MessageCircle size={14} /> <span>1</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 最新动态 */}
+      <UpdatesFeed />
 
     </main>
   )
