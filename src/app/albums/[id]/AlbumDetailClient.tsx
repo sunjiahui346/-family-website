@@ -31,7 +31,7 @@ export default function AlbumDetailClient({ album, initialMedia, isLoggedIn }: {
     // 生成唯一文件名
     const fileExt = file.name.split('.').pop()
     const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`
-    const filePath = `${album.id}/${fileName}`
+    const filePath = `${String(album.id)}/${fileName}`
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
@@ -52,7 +52,7 @@ export default function AlbumDetailClient({ album, initialMedia, isLoggedIn }: {
       const { data: newMedia, error: dbError } = await supabase
         .from('media_items')
         .insert([{
-          album_id: album.id,
+          album_id: String(album.id),
           file_name: file.name,
           file_url: publicUrl,
           file_type: fileType,
@@ -65,7 +65,7 @@ export default function AlbumDetailClient({ album, initialMedia, isLoggedIn }: {
 
       // 3. 如果是第一张照片，自动设为相册封面
       if (fileType === 'image' && mediaItems.length === 0 && !album.cover_image) {
-        await supabase.from('albums').update({ cover_image: publicUrl }).eq('id', album.id)
+        await supabase.from('albums').update({ cover_image: publicUrl }).eq('id', String(album.id))
       }
 
       setMediaItems([newMedia, ...mediaItems])
@@ -86,12 +86,12 @@ export default function AlbumDetailClient({ album, initialMedia, isLoggedIn }: {
         <Link href="/albums" className="p-2 -ml-2 text-gray-400 hover:text-[var(--color-brand-orange)] transition-colors">
           <ArrowLeft size={24} />
         </Link>
-        <h1 className="text-xl font-bold text-[#5C4D3C] ml-2 truncate">{album.title}</h1>
+        <h1 className="text-xl font-bold text-[#5C4D3C] ml-2 truncate">{String(album.title || '')}</h1>
       </div>
 
       {album.description && (
         <p className="text-sm text-[#7D6B5A] mb-6 bg-[var(--color-brand-yellow)]/10 p-4 rounded-2xl">
-          {album.description}
+          {String(album.description)}
         </p>
       )}
 
@@ -106,12 +106,12 @@ export default function AlbumDetailClient({ album, initialMedia, isLoggedIn }: {
         <div className="grid grid-cols-3 gap-2">
           {mediaItems.map((item) => (
             <div
-              key={item.id}
+              key={String(item.id)}
               onClick={() => setPreviewMedia(item)}
               className="aspect-square bg-gray-100 rounded-xl overflow-hidden relative group cursor-pointer"
             >
               {item.file_type === 'image' && (
-                <img src={item.file_url} alt={item.file_name} className="w-full h-full object-cover" />
+                <img src={String(item.file_url)} alt={String(item.file_name)} className="w-full h-full object-cover" />
               )}
               {item.file_type === 'video' && (
                 <div className="w-full h-full bg-slate-800 flex items-center justify-center text-white">
@@ -127,7 +127,7 @@ export default function AlbumDetailClient({ album, initialMedia, isLoggedIn }: {
               {/* 悬浮信息遮罩 */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2">
                 <span className="text-[9px] text-white truncate w-full">
-                  {item.uploader?.raw_user_meta_data?.full_name || '家人'} 上传
+                  {String((item.uploader as any)?.raw_user_meta_data?.full_name || '家人')} 上传
                 </span>
               </div>
             </div>
@@ -167,19 +167,19 @@ export default function AlbumDetailClient({ album, initialMedia, isLoggedIn }: {
 
           <div className="w-full max-w-lg flex flex-col items-center mt-10">
             {previewMedia.file_type === 'image' && (
-              <img src={previewMedia.file_url} alt="" className="w-full max-h-[50vh] object-contain rounded-lg" />
+              <img src={String(previewMedia.file_url)} alt="" className="w-full max-h-[50vh] object-contain rounded-lg" />
             )}
 
             {previewMedia.file_type === 'video' && (
-              <video src={previewMedia.file_url} controls autoPlay className="w-full max-h-[50vh] rounded-lg" />
+              <video src={String(previewMedia.file_url)} controls autoPlay className="w-full max-h-[50vh] rounded-lg" />
             )}
 
             {previewMedia.file_type === 'document' && (
               <div className="bg-white p-8 rounded-2xl text-center w-full">
                 <FileIcon size={48} className="text-[var(--color-brand-green)] mx-auto mb-4" />
-                <h3 className="font-bold text-gray-800 mb-2 truncate">{previewMedia.file_name}</h3>
+                <h3 className="font-bold text-gray-800 mb-2 truncate">{String(previewMedia.file_name)}</h3>
                 <a
-                  href={previewMedia.file_url}
+                  href={String(previewMedia.file_url)}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-block mt-4 px-6 py-2 bg-[var(--color-brand-green)] text-white rounded-full text-sm font-medium"
@@ -191,11 +191,11 @@ export default function AlbumDetailClient({ album, initialMedia, isLoggedIn }: {
 
             <div className="w-full mt-6">
               <div className="text-white/70 text-sm mb-2">
-                由 <span className="font-bold text-white">{previewMedia.uploader?.raw_user_meta_data?.full_name || '家人'}</span> 上传
+                由 <span className="font-bold text-white">{String((previewMedia.uploader as any)?.raw_user_meta_data?.full_name || '家人')}</span> 上传
               </div>
 
               {/* 点赞与评论组件 */}
-              <MediaInteractions mediaId={previewMedia.id} isLoggedIn={isLoggedIn} />
+              <MediaInteractions mediaId={String(previewMedia.id)} isLoggedIn={isLoggedIn} />
             </div>
           </div>
         </div>

@@ -77,8 +77,9 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
       router.refresh()
       onClose()
-    } catch (err: any) {
-      setError(err.message || '发生了一些错误，请稍后再试')
+    } catch (err: unknown) {
+      const e = err as Error
+      setError(e.message || '发生了一些错误，请稍后再试')
     } finally {
       setLoading(false)
     }

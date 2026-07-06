@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Heart, MessageCircle, Send, Loader2 } from 'lucide-react'
-import { formatDistanceToNow } from 'lucide-react' // 这里借用个概念，实际上我们会手写一个简单的格式化
 
 interface MediaInteractionsProps {
   mediaId: string
@@ -158,16 +157,16 @@ export function MediaInteractions({ mediaId, isLoggedIn }: MediaInteractionsProp
               <p className="text-white/40 text-sm text-center py-4">还没有人评论，快来抢沙发！</p>
             ) : (
               comments.map(c => (
-                <div key={c.id} className="flex gap-3">
+                <div key={String(c.id)} className="flex gap-3">
                   <div className="w-8 h-8 rounded-full bg-[var(--color-brand-orange)] flex-shrink-0 overflow-hidden">
-                     <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${c.user?.raw_user_meta_data?.full_name}&backgroundColor=FF9B54`} alt="avatar" />
+                     <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${String((c.user as any)?.raw_user_meta_data?.full_name)}&backgroundColor=FF9B54`} alt="avatar" />
                   </div>
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-white/80 font-bold text-xs">{c.user?.raw_user_meta_data?.full_name || '家人'}</span>
-                      <span className="text-white/40 text-[10px]">{timeAgo(c.created_at)}</span>
+                      <span className="text-white/80 font-bold text-xs">{String((c.user as any)?.raw_user_meta_data?.full_name || '家人')}</span>
+                      <span className="text-white/40 text-[10px]">{timeAgo(String(c.created_at))}</span>
                     </div>
-                    <p className="text-white text-sm mt-0.5 leading-snug">{c.content}</p>
+                    <p className="text-white text-sm mt-0.5 leading-snug">{String(c.content)}</p>
                   </div>
                 </div>
               ))
